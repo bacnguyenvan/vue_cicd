@@ -1,0 +1,25 @@
+name: Deploy to Github
+on:
+  push:
+    branchs:
+      - master
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Create node environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+      - name: Install packages and build application
+        run: |
+          npm ci
+          npm run build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
